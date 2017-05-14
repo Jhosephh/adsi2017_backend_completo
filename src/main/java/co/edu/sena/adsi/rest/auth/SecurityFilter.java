@@ -31,7 +31,7 @@ import org.joda.time.DateTime;
 public class SecurityFilter implements ContainerRequestFilter, ContainerResponseFilter {
 
     @EJB
-    private UsuarioFacade ejbFacadeUsuario;
+    private UsuarioFacade usuarioEJB;
 
     private static final String EXPIRE_ERROR_MSG = "Token has expired",
             JWT_ERROR_MSG = "Unable to parse JWT",
@@ -65,8 +65,8 @@ public class SecurityFilter implements ContainerRequestFilter, ContainerResponse
             if (new DateTime(claimSet.getExpirationTime()).isBefore(DateTime.now())) {
                 throw new IOException(EXPIRE_ERROR_MSG);
             } else {
-                Usuario user = ejbFacadeUsuario.find(Integer.parseInt(claimSet.getSubject()));
-                Authorizer authorizer = new Authorizer(user.getRolesList(), user.getEmail(),
+                Usuario user = usuarioEJB.find(Integer.parseInt(claimSet.getSubject()));
+                Authorizer authorizer = new Authorizer(user.getRolesList(), user.getNumDocumento(),
                         originalContext.isSecure());
                 requestContext.setSecurityContext(authorizer);
             }
@@ -100,7 +100,12 @@ public class SecurityFilter implements ContainerRequestFilter, ContainerResponse
 
         @Override
         public boolean isUserInRole(String role) {
-            return roles.contains(new Rol(role));
+            for (Rol role1 : roles) {
+                if(role1.equals(role1)){
+                   return true;
+                }
+            }
+             return false;
         }
 
         @Override

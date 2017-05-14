@@ -3,6 +3,7 @@ package co.edu.sena.adsi.rest.services;
 import co.edu.sena.adsi.jpa.entities.Usuario;
 import co.edu.sena.adsi.jpa.sessions.UsuarioFacade;
 import java.util.List;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -30,6 +31,7 @@ public class UsuarioREST {
      * @return lista de usuarios
      */
     @GET
+    @RolesAllowed({"ADMIN"})
     public List<Usuario> findAll(){
         return usuarioEJB.findAll();
     }
