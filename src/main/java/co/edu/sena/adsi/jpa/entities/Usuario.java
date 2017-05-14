@@ -18,7 +18,6 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -183,7 +182,6 @@ public class Usuario implements Serializable {
         this.fotoPerfilOpcional = fotoPerfilOpcional;
     }
 
-    @XmlTransient
     public List<Rol> getRolesList() {
         return rolesList;
     }
@@ -210,7 +208,7 @@ public class Usuario implements Serializable {
 
     @Override
     public String toString() {
-        return "co.edu.sena.adsi.jpa.entities.Usuarios[ id=" + id + " ]";
+        return "co.edu.sena.adsi.jpa.entities.Usuario[ id=" + id + " ]";
     }
     
 }
