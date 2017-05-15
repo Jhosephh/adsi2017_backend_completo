@@ -54,4 +54,26 @@ public class UsuarioFacade extends AbstractFacade<Usuario> {
         }
     }
     
+    /**
+     * Busca usuario por numDocumento
+     *
+     * @param numDocumento
+     * @return Usuario
+     */
+    public Usuario findUsuarioByNumDocumento(String numDocumento) {
+
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<Usuario> cq = cb.createQuery(Usuario.class);
+        Root<Usuario> usuario = cq.from(Usuario.class);
+        cq.where(cb.equal(usuario.get(Usuario_.numDocumento), numDocumento));
+        TypedQuery<Usuario> q = getEntityManager().createQuery(cq);
+        try {
+            return (Usuario) q.getSingleResult();
+        } catch (NonUniqueResultException ex) {
+            throw ex;
+        } catch (NoResultException ex) {
+            return null;
+        }
+    }
+    
 }
