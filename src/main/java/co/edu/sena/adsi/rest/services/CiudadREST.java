@@ -11,6 +11,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 /**
@@ -63,6 +64,21 @@ public class CiudadREST {
     @Path("{id}")
     public void edit(@PathParam("id") Integer id, Ciudad ciudad){
         ciudadEJB.edit(ciudad);
+    }
+    
+    /**
+     * Es utilizado para los autocomplete de ciudad en el cliente
+     *
+     * @param nombreCiudad
+     * @param idDepartamento
+     * @return Lista de Ciudades
+     */
+    @GET
+    @Path("find")
+    public List<Ciudad> findByNombre(
+            @QueryParam("nombre") String nombreCiudad,
+            @QueryParam("idDepartamento") Integer idDepartamento) {
+        return ciudadEJB.findCiudadByNombre(nombreCiudad, idDepartamento);
     }
         
 }
