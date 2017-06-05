@@ -19,7 +19,7 @@ import javax.ws.rs.core.Response.Status;
 
 /**
  *
- * @author Why?
+ * @author ruber19
  */
 @Path("auth")
 public class AuthREST {

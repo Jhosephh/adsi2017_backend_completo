@@ -1,8 +1,11 @@
 package co.edu.sena.adsi.rest.services;
 
+import co.edu.sena.adsi.jpa.entities.EmailApp;
 import co.edu.sena.adsi.jpa.entities.Usuario;
+import co.edu.sena.adsi.jpa.sessions.EmailAppFacade;
 import co.edu.sena.adsi.jpa.sessions.UsuarioFacade;
 import co.edu.sena.adsi.rest.auth.DigestUtil;
+import co.edu.sena.adsi.rest.utils.SendEmail;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.util.List;
@@ -33,6 +36,9 @@ public class UsuarioREST {
     @EJB
     private UsuarioFacade usuarioEJB;
 
+    @EJB
+    private EmailAppFacade emailEJB;
+    
     /**
      * Obtiene todos los usuarioes
      *
@@ -56,11 +62,10 @@ public class UsuarioREST {
             @QueryParam("idCiudad") Integer idCiudad,
             @QueryParam("idDepartamento") Integer idDepartamento,
             @QueryParam("idTipoDocumento") Integer idTipoDocumento) {
-        
-        return usuarioEJB.findUsers(idUsuario, sexo, activo, numDocumento, 
+
+        return usuarioEJB.findUsers(idUsuario, sexo, activo, numDocumento,
                 email, idCiudad, idDepartamento, idTipoDocumento);
     }
-    
 
     /**
      * Busca usuario por su id
@@ -78,18 +83,35 @@ public class UsuarioREST {
      * Crear un usuario
      *
      * @param usuario
-     * @return 
+     * @return
      */
     @POST
     public Response create(Usuario usuario) {
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = gsonBuilder.create();
+        String pass = usuario.getPassword();
         try {
             if (usuarioEJB.findUsuarioByEmail(usuario.getEmail()) == null) {
                 if (usuarioEJB.findUsuarioByNumDocumento(usuario.getNumDocumento()) == null) {
+                    
                     usuario.setPassword(DigestUtil.cifrarPassword(usuario.getPassword()));
                     usuarioEJB.create(usuario);
-                    return Response.status(Response.Status.CREATED).entity(gson.toJson("El usuario se creó correctamente!")).build();
+                    try {
+
+                        //Uso configuración de email para Registro
+                        EmailApp emailApp = emailEJB.findConfigEmail("REGISTRO");
+                        if (emailApp == null) {
+                            emailApp = emailEJB.findConfigEmail("GENERAL");
+                        }
+                        //Envio de email
+                        SendEmail enviarEmailUser = new SendEmail();
+                        enviarEmailUser.sendEmailRegistroUsuario(emailApp, usuario, pass);
+
+                        return Response.status(Response.Status.CREATED).entity(gson.toJson("El usuario se creó correctamente!")).build();
+                    } catch (Exception e) {
+                        System.out.println("ERROR ENVIO DE EMAIL: " + e);
+                        return Response.status(Response.Status.BAD_REQUEST).entity(gson.toJson("No fue posible el envio del email")).build();
+                    }
                 } else {
                     return Response.status(Response.Status.BAD_REQUEST).entity(gson.toJson("El número de documento ya se encuentra registrado!.")).build();
                 }

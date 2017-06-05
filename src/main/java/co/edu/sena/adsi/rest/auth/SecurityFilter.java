@@ -24,7 +24,7 @@ import org.joda.time.DateTime;
 
 /**
  *
- * @author Why?
+ * @author ruber19
  */
 @Provider
 @Priority(Priorities.AUTHENTICATION)
@@ -101,7 +101,7 @@ public class SecurityFilter implements ContainerRequestFilter, ContainerResponse
         @Override
         public boolean isUserInRole(String role) {
             for (Rol role1 : roles) {
-                if(role1.equals(role1)){
+                if(role1.getId().equals(role)){
                    return true;
                 }
             }
