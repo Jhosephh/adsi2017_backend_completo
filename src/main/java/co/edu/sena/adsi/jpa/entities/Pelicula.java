@@ -34,7 +34,7 @@ public class Pelicula implements Serializable {
     @NotNull
     @Size(min = 1, max = 4)
     @Column(name = "id")
-    private String id;
+    private Integer id;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
@@ -56,11 +56,11 @@ public class Pelicula implements Serializable {
     public Pelicula() {
     }
 
-    public Pelicula(String id) {
+    public Pelicula(Integer id) {
         this.id = id;
     }
 
-    public Pelicula(String id, String nombre) {
+    public Pelicula(Integer id, String nombre) {
         this.id = id;
         this.nombre = nombre;
     }
@@ -73,11 +73,11 @@ public class Pelicula implements Serializable {
         this.descripcion = descripcion;
     }
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
