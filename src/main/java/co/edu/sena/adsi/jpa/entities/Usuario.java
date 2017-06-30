@@ -71,6 +71,9 @@ public class Usuario implements Serializable {
     @Lob
     @Column(name = "foto_perfil")
     private byte[] fotoPerfil;
+    @Size(max = 30)
+    @Column(name = "tipo_imagen")
+    private String tipoImagen;
     @Size(max = 100)
     @Column(name = "foto_perfil_opcional")
     private String fotoPerfilOpcional;
@@ -178,6 +181,14 @@ public class Usuario implements Serializable {
 
     public void setFotoPerfil(byte[] fotoPerfil) {
         this.fotoPerfil = fotoPerfil;
+    }
+    
+    public String getTipoImagen(){
+        return tipoImagen;
+    }
+    
+    public void setTipoImagen(String tipoImagen){
+        this.tipoImagen = tipoImagen;
     }
 
     public String getFotoPerfilOpcional() {

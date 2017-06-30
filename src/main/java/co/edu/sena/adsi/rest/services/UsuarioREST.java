@@ -38,7 +38,7 @@ public class UsuarioREST {
 
     @EJB
     private EmailAppFacade emailEJB;
-    
+
     /**
      * Obtiene todos los usuarioes
      *
@@ -93,7 +93,7 @@ public class UsuarioREST {
         try {
             if (usuarioEJB.findUsuarioByEmail(usuario.getEmail()) == null) {
                 if (usuarioEJB.findUsuarioByNumDocumento(usuario.getNumDocumento()) == null) {
-                    
+
                     usuario.setPassword(DigestUtil.cifrarPassword(usuario.getPassword()));
                     usuarioEJB.create(usuario);
                     try {
@@ -129,10 +129,18 @@ public class UsuarioREST {
      *
      * @param id
      * @param usuario
+     * @return 
      */
     @PUT
     @Path("{id}")
-    public void edit(@PathParam("id") Integer id, Usuario usuario) {
-        usuarioEJB.edit(usuario);
+    public Response edit(@PathParam("id") Integer id, Usuario usuario) {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        Gson gson = gsonBuilder.create();
+        try {
+            usuarioEJB.edit(usuario);
+            return Response.status(Response.Status.CREATED).entity(gson.toJson("El usuario se actualizó correctamente!")).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(gson.toJson("Error al actualizar el usuario!.")).build();
+        }
     }
 }
